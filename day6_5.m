@@ -10,55 +10,13 @@ clc;clear;close all;
 % img = '20130320T004401.897143.Cam6_31.png';
 clc;clear;close all;
 img = '20130320T004353.135082.Cam6_53.png';
-src = imread(img); % ¶ÁÈ¡Ô­Í¼Ïñ
-hsv = rgb2hsv(src);% ½«RGB¿Õ¼ä×ª»»µ½HSV¿Õ¼ä
-H = medfilt2(hsv(:,:,1),[5,5]);% ¶ÔHÍ¨µÀ×öÖĞÖµÂË²¨
-Threshold = 0.8*max(H(:)); %È·¶¨ÓÃÒÔ·Ö¸îÍ¼ÏñµÄãĞÖµ
-BW = im2bw(H,Threshold); % ¶ÔHÍ¨µÀ×öãĞÖµ·Ö¸î»ñµÃ¶şÖµÍ¼Ïñ
-SE = strel('disk',3); % ´´½¨ĞÎÌ¬Ñ§²Ù×÷½á¹¹Ôª(°ë¾¶Îª3µÄÔ²ÅÌ)
-BW1 = imopen(BW,SE); % ¿ª²Ù×÷Ïû³ıĞ¡¿éÇøÓò
-BW2 = imfill(BW1,'holes');% ¶Ô¶şÖµÍ¼Ïñ×ö¿×¶´Ìî³ä
-SE = strel('disk',8);% ´´½¨ĞÎÌ¬Ñ§²Ù×÷½á¹¹Ôª(°ë¾¶Îª8µÄÔ²ÅÌ)
-BW2 = imdilate(BW2,SE);% ÅòÕÍ²Ù×÷À©´óÄ¿±êÇøÓò
-
-figure(1); % ÏÔÊ¾Ô­Í¼¡¢HÍ¨µÀ¡¢¶şÖµÍ¼Ïñ
-subplot(221);imshow(src);title('Ô­Í¼Ïñ');
-subplot(222);imshow(H);title('Æ½»¬ºóµÄHÍ¨µÀ');
-subplot(223);imshow(BW,[]);title('³õÊ¼ãĞÖµ·Ö¸îºó');
-subplot(224);imshow(BW2,[]);title('ĞÎÌ¬Ñ§²Ù×÷ºó');
-
-% »­³öÆ»¹ûËùÔÚ±»·Ö¸î³öÀ´µÄÇøÓòµÄ±ß½ç¼°ÖĞĞÄ
-[B,L] = bwboundaries(BW2,'noholes');% »ñÈ¡¶şÖµÍ¼ÏñÖĞÃ¿Æ¬ÇøÓòµÄ±ß½ç
-P = regionprops(BW2,'basic');% »ñÈ¡·Ö¸îºóÃ¿¸öÇøÓòµÄ»ù±¾ĞÅÏ¢(Ãæ»ı¡¢ÖĞĞÄ¡¢±ß½ç¿ò)
-centroids = cat(1,P.Centroid); % µÃµ½Ã¿¸öÇøÓòµÄÖĞĞÄ×ø±ê
-figure(2); % ÔÚÔ­Í¼±ê³öÒÉËÆË®¹ûÇøÓò
-subplot(121);imshow(src);
-subplot(122);imshow(src);
-hold on;
-for k=1:length(B) % »­³öÇøÓò±ß½ç
-    boundary = B{k};
-   plot(boundary(:,2),boundary(:,1),'w','LineWidth',2); 
-end
-hold on;% ÔÚÇøÓòÖĞĞÄ±ê¡®+¡¯
-plot(centroids(:,1),centroids(:,2),'r+','LineWidth',2);
-% hold on; % »­³ö±ß½ç¿ò
-% bbox = cat(1,P.BoundingBox);
-% for i=1:size(bbox,1)
-%     rectangle('Position',bbox(i,:));
-% end
-% È¦³öÆ»¹ûËùÔÚÎ»ÖÃ¼°Æ»¹û
-hold on;
-for i=1:size(P,1)
-    R = sqrt(P(i).Area/(1.5*pi));
-    plotCircle(centroids(i,1),centroids(i,2),R);
-end
-% %
-% aa = double(src);
-% aaa = double(BW2);
-% aaaa=aa;
-% for i=1:3
-%    aaaa(:,:,i)=aa(:,:,i).*aaa; 
-% end
-% figure(3);
-% subplot(121);imshow(src);
-% subplot(122);imshow(uint8(aaaa));
+src = imread(img); % è¯»å–åŸå›¾åƒ
+hsv = rgb2hsv(src);% å°†RGBç©ºé—´è½¬æ¢åˆ°HSVç©ºé—´
+H = medfilt2(hsv(:,:,1),[5,5]);% å¯¹Hé€šé“åšä¸­å€¼æ»¤æ³¢
+Threshold = 0.8*max(H(:)); %ç¡®å®šç”¨ä»¥åˆ†å‰²å›¾åƒçš„é˜ˆå€¼
+BW = im2bw(H,Threshold); % å¯¹Hé€šé“åšé˜ˆå€¼åˆ†å‰²è·å¾—äºŒå€¼å›¾åƒ
+SE = strel('disk',3); % åˆ›å»ºå½¢æ€å­¦æ“ä½œç»“æ„å…ƒ(åŠå¾„ä¸º3çš„åœ†ç›˜)
+BW1 = imopen(BW,SE); % å¼€æ“ä½œæ¶ˆé™¤å°å—åŒºåŸŸ
+BW2 = imfill(BW1,'holes');% å¯¹äºŒå€¼å›¾åƒåšå­”æ´å¡«å……
+SE = strel('disk',8);% åˆ›å»ºå½¢æ€å­¦æ“ä½œç»“æ„å…ƒ(åŠå¾„ä¸º8çš„åœ†ç›˜)
+BW2 = imdilate(BW2,SE);% è†¨èƒ€æ“ä½œæ‰©å¤§ç›®æ ‡åŒºåŸŸ
